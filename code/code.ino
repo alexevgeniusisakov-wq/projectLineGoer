@@ -1,22 +1,27 @@
+#define AzimovDriver
+#define pastVersion
+
 #include "Driver.h"
 
-Driver.driver;
+Driver driver;
 
 // Настройки
 #define SpeedMove 100
 
 // Пины датчиков
 const uint8_t dataPins[] = {A0, A1, A2, A3, A4};
+const uint8_t pinsCount = sizeof(dataPins) / sizeof(uint8_t);
 
 // Состаяния датчиков
-bool datas[5] = {0, 0, 0, 0, 0};
+bool datas[pinsCount];
 
 // Переменные
 int speedTerning = 0;
 
 void setup() {
-  for (uint8_t i = 0; i < 5; i++) {
+  for (uint8_t i = 0; i < pinsCount; i++) {
     pinMode(dataPins[i], INPUT);
+    datas[i] = 0;
   }
 }
 
@@ -36,11 +41,29 @@ void loop() {
     // нужен таймер
     // а потом поиск линии
   }
-  go(SpeedMove + speedTerning, SpeedMove - speedTerning);
+  driver.go(SpeedMove + speedTerning, SpeedMove - speedTerning);
+}
+
+int8_t countOffset(){
+  int8_t result = 0;
+  bool isLine = 0;
+  uint8_t afterLine = 0;
+  uint8_t beforeLine = 0;
+  getDatas();
+  for(int i = 0; i < pinsCount; i++){
+    if(datas[i]){
+      isLine = true;
+
+    }else{
+      if(isLine) afterLine++;
+      else beforeLine++;
+    }
+  }
+  return beforeLine - afterLine;
 }
 
 void getDatas() {
-  for (uint8_t i = 0; i < 5; i++) {
+  for (uint8_t i = 0; i < pinsCount; i++) {
     datas[i] = analogRead(dataPins[i]) < 500;
   }
 }

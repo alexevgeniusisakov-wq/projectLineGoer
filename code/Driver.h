@@ -12,10 +12,10 @@
   pinMode(leftDirPin1, OUTPUT);  \
   pinMode(rightDirPin1, OUTPUT);
 #ifdef AimovDriver
-#define ConstructorInit()   leftSpeedPin = 12;    \
-  rightSpeedPin = 13;  \
-  leftDirPin1 = 10;  \
-  rightDirPin1 = 11;  \
+#define ConstructorInit()   leftSpeedPin = 10;    \
+  rightSpeedPin = 11;  \
+  leftDirPin1 = 12;  \
+  rightDirPin1 = 13;  \
   leftDirPin2 = 0;  \
   rightDirPin2 = 0;  \
   type = 0;    \

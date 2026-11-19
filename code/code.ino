@@ -43,12 +43,6 @@ void loop() {
 void lineGoing() {
   int8_t offset = countOffset();
 
-  if (offset == 0 && !isLineDetected()) {
-    // Линия не найдена ни одним датчиком — ищем её
-    driver.go(-SearchSpeed, SearchSpeed);
-    return;
-  }
-
   int correction = offset * Kp;
   int leftSpeed  = SpeedMove - correction;
   int rightSpeed = SpeedMove + correction;
@@ -58,14 +52,6 @@ void lineGoing() {
   rightSpeed = constrain(rightSpeed, -255, 255);
 
   driver.go(leftSpeed, rightSpeed);
-}
-
-// Есть ли линия хотя бы под одним датчиком
-bool isLineDetected() {
-  for (uint8_t i = 0; i < pinsCount; i++) {
-    if (datas[i] != isInvers) return true;
-  }
-  return false;
 }
 
 int8_t countOffset(){

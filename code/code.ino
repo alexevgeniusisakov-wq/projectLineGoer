@@ -8,6 +8,9 @@ Driver driver;
 // Настройки
 #define SpeedMove 100
 
+//Переменные Насткойки
+bool isInvers = false;
+
 // Пины датчиков
 const uint8_t dataPins[] = {A0, A1, A2, A3, A4};
 const uint8_t pinsCount = sizeof(dataPins) / sizeof(uint8_t);
@@ -46,16 +49,15 @@ void loop() {
 
 int8_t countOffset(){
   int8_t result = 0;
-  bool isLine = 0;
+  bool wasLine = 0;
   uint8_t afterLine = 0;
   uint8_t beforeLine = 0;
   getDatas();
   for(int i = 0; i < pinsCount; i++){
-    if(datas[i]){
-      isLine = true;
-
+    if(datas[i] != isInversiv){
+      wasLine = true;
     }else{
-      if(isLine) afterLine++;
+      if(wasLine) afterLine++;
       else beforeLine++;
     }
   }

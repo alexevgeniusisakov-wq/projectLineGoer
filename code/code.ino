@@ -18,8 +18,15 @@ const uint8_t pinsCount = sizeof(dataPins) / sizeof(uint8_t);
 // Состаяния датчиков
 bool datas[pinsCount];
 
-// Переменные
-int speedTerning = 0;
+// Прототипы функций
+int8_t countOffset();
+void getDatas();
+bool isLineDetected();
+void lineGoing();
+
+// Настройки движения по линии
+#define Kp 30            // Коэффициент пропорциональной регуляции смещения
+#define SearchSpeed 60   // Скорость поиска линии при её потере
 
 void setup() {
   for (uint8_t i = 0; i < pinsCount; i++) {
@@ -29,32 +36,45 @@ void setup() {
 }
 
 void loop() {
-  getDatas();
-  if(datas[2] == 1){
-    speedTerning = 0;
-  }else if(datas[1] == 1){
-    speedTerning = -80;
-  }else if(datas[3] == 1){
-    speedTerning = 80;
-  }else if(datas[0] == 1){
-    speedTerning = -160;
-  }else if(datas[4] == 1){
-    speedTerning = 160;
-  }else{
-    // нужен таймер
-    // а потом поиск линии
+  lineGoing();
+}
+
+// Движение по линии с использованием countOffset()
+void lineGoing() {
+  int8_t offset = countOffset();
+
+  if (offset == 0 && !isLineDetected()) {
+    // Линия не найдена ни одним датчиком — ищем её
+    driver.go(-SearchSpeed, SearchSpeed);
+    return;
   }
-  driver.go(SpeedMove + speedTerning, SpeedMove - speedTerning);
+
+  int correction = offset * Kp;
+  int leftSpeed  = SpeedMove - correction;
+  int rightSpeed = SpeedMove + correction;
+
+  // Ограничение скорости допустимым диапазоном
+  leftSpeed  = constrain(leftSpeed,  -255, 255);
+  rightSpeed = constrain(rightSpeed, -255, 255);
+
+  driver.go(leftSpeed, rightSpeed);
+}
+
+// Есть ли линия хотя бы под одним датчиком
+bool isLineDetected() {
+  for (uint8_t i = 0; i < pinsCount; i++) {
+    if (datas[i] != isInvers) return true;
+  }
+  return false;
 }
 
 int8_t countOffset(){
-  int8_t result = 0;
   bool wasLine = 0;
   uint8_t afterLine = 0;
   uint8_t beforeLine = 0;
   getDatas();
   for(int i = 0; i < pinsCount; i++){
-    if(datas[i] != isInversiv){
+    if(datas[i] != isInvers){
       wasLine = true;
     }else{
       if(wasLine) afterLine++;

@@ -21,12 +21,10 @@ bool datas[pinsCount];
 // Прототипы функций
 int8_t countOffset();
 void getDatas();
-bool isLineDetected();
 void lineGoing();
 
 // Настройки движения по линии
 #define Kp 30            // Коэффициент пропорциональной регуляции смещения
-#define SearchSpeed 60   // Скорость поиска линии при её потере
 
 void setup() {
   for (uint8_t i = 0; i < pinsCount; i++) {
@@ -41,20 +39,24 @@ void loop() {
 
 // Движение по линии с использованием countOffset()
 void lineGoing() {
-  int8_t offset = countOffset();
+  static uint32_t timer = millis() -1;
+  if (timer <= millis()){
+    int8_t offset = countOffset();
 
-  int correction = offset * Kp;
-  int leftSpeed  = SpeedMove - correction;
-  int rightSpeed = SpeedMove + correction;
+    int correction = offset * Kp;
+    int leftSpeed  = SpeedMove - correction;
+    int rightSpeed = SpeedMove + correction;
 
-  // Ограничение скорости допустимым диапазоном
-  leftSpeed  = constrain(leftSpeed,  -255, 255);
-  rightSpeed = constrain(rightSpeed, -255, 255);
+    // Ограничение скорости допустимым диапазоном
+    leftSpeed  = constrain(leftSpeed,  -255, 255);
+    rightSpeed = constrain(rightSpeed, -255, 255);
 
-  driver.go(leftSpeed, rightSpeed);
+    driver.go(leftSpeed, rightSpeed);
+  }
 }
 
 int8_t countOffset(){
+  static int8_t lastResult = 0;
   bool wasLine = 0;
   uint8_t afterLine = 0;
   uint8_t beforeLine = 0;
@@ -67,7 +69,9 @@ int8_t countOffset(){
       else beforeLine++;
     }
   }
-  return beforeLine - afterLine;
+  int8_t result = beforeLine - afterLine;
+  if(abc(result) == pinsCount) result = result * (lastResult / abs(lastResult));
+  return result;
 }
 
 void getDatas() {

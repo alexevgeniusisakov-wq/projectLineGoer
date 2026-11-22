@@ -1,7 +1,3 @@
-#define AzimovDriver   // Фикс: макрос типа драйвера должен быть определён ДО подключения Driver.h.
-                       // Иначе в Driver.cpp срабатывает ветка #else -> offConstructure,
-                       // конструктор Driver::Driver() не компилируется и линкер падает:
-                       // undefined reference to `Driver::Driver()'
 #include "Driver.h"
 #include <stdint.h>
 

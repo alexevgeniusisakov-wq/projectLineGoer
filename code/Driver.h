@@ -11,11 +11,6 @@
   pinMode(rightSpeedPin, OUTPUT);  \
   pinMode(leftDirPin1, OUTPUT);  \
   pinMode(rightDirPin1, OUTPUT);
-// Тип драйвера задаётся ОДИН раз здесь — не нужно определять макрос в каждом .cpp.
-// Чтобы сменить тип, закомментируйте текущую строку и раскомментируйте нужную.
-#define AzimovDriver
-//#define AmperkaDriver
-
 #ifdef AzimovDriver
 #define ConstructorInit()   leftSpeedPin = 10;    \
   rightSpeedPin = 11;  \
@@ -35,7 +30,7 @@
   driverType = 0;    \
   StdPinModesInit()
 #else
-#error "Не задан тип драйвера: определите AzimovDriver или AmperkaDriver в Driver.h"
+#define offConstructure
 #endif
 
 #pragma region Class
@@ -43,7 +38,9 @@
 class Driver {
   public:
     // Конструкторы
-    Driver();
+    #ifndef offConstructure 
+      Driver();
+    #endif
 
     Driver(uint8_t typeTmp, uint8_t M1Pin1, uint8_t M1Pin2, uint8_t M2Pin1, uint8_t M2Pin2);
     Driver(uint8_t LMotorSpeedPin, uint8_t LMotorDirectionPin, uint8_t LMotorDirectionPin2, uint8_t RMotorSpeedPin, uint8_t RMotorDirectionPin, uint8_t RMotorDirectionPin2);
@@ -104,6 +101,12 @@ class Driver {
       #endif
     #endif
   private:
+    // Запрет конструктора
+    #ifdef offConstructure
+      Driver();
+    #endif
+
+
     // Внутрение методы
     void activateDirectionPin(uint8_t pin1, uint8_t pin2, uint8_t Direction, int Speed);
 

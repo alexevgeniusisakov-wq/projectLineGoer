@@ -1,11 +1,16 @@
-#include "Driver.h"   // Тип драйвера (AzimovDriver) определяется в Driver.h,
-                      // поэтому конструктор Driver::Driver() всегда компилируется.
+#define AzimovDriver   // Фикс: макрос типа драйвера должен быть определён ДО подключения Driver.h.
+                       // Иначе в Driver.cpp срабатывает ветка #else -> offConstructure,
+                       // конструктор Driver::Driver() не компилируется и линкер падает:
+                       // undefined reference to `Driver::Driver()'
+#include "Driver.h"
 #include <stdint.h>
 
 // Конструктор по умолчанию
+#ifndef offConstructure 
 Driver::Driver() {
   ConstructorInit()
 }
+#endif
 
 // Пользовательский конструктор
 Driver::Driver(uint8_t typeTmp, uint8_t LMotorDirectionPin, uint8_t LMotorSpeedPin, uint8_t RMotorDirectionPin, uint8_t RMotorSpeedPin) {

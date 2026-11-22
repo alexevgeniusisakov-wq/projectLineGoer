@@ -1,3 +1,4 @@
+#define AzimovDriver
 #define pastVersion
 
 #include "Driver.h"

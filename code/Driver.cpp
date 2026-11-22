@@ -69,7 +69,7 @@ void Driver::turnInPlace(bool Direction, uint8_t Speed) {
 }  
 
 //Тормаз!!!
-void Driver::stop() {
+void Driver::Stop() {
   setMotorSpeeds(0, 0);
 }
 
@@ -78,7 +78,7 @@ void Driver::drive(int leftSpeed, int rightSpeed) {
   #ifdef smooth_changing
   targetLeftSpeed = leftSpeed;
   targetRightSpeed = rightSpeed;
-  update();
+  Update();
   setMotorSpeeds(LeftSpeed, RightSpeed);
   #else
   setMotorSpeeds(leftSpeed, rightSpeed);

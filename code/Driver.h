@@ -11,7 +11,7 @@
   pinMode(rightSpeedPin, OUTPUT);  \
   pinMode(leftDirPin1, OUTPUT);  \
   pinMode(rightDirPin1, OUTPUT);
-#ifdef AimovDriver
+#ifdef AzimovDriver
 #define ConstructorInit()   leftSpeedPin = 10;    \
   rightSpeedPin = 11;  \
   leftDirPin1 = 12;  \
@@ -52,12 +52,12 @@ class Driver {
     void forward(uint8_t Speed);
     void backward(int Speed);
     void turnInPlace(bool Direction, uint8_t Speed);
-    void stop();
+    void Stop();
     void drive(int leftSpeed, int rightSpeed);
     void setMotorSpeeds(int leftSpeed, int rightSpeed);
 
     #ifdef smooth_changing
-      void Driver::update() {
+      void Driver::Update() {
         if(millis() > nextUpdateTime){
           if(LeftSpeed > targetLeftSpeed)LeftSpeed -= rampStep;
           if(LeftSpeed < targetLeftSpeed)LeftSpeed += rampStep;
@@ -70,8 +70,8 @@ class Driver {
           nextUpdateTime = millis() + rampDelayMs;
         }
       }
-      void Driver::setRampRate(uint8_t step, uint8_t delayMs){
-        rampStep = step;
+      void Driver::setRampRate(uint8_t Step, uint8_t delayMs){
+        rampStep = Step;
         rampDelayMs = delayMs;
       }
     #endif
@@ -86,21 +86,18 @@ class Driver {
       [[deprecated("Use turnInPlace() instead")]]
       void around(bool d, uint8_t s) { turnInPlace(d, s); }
 
-      [[deprecated("Use stop() instead")]]
-      void Stop() { stop(); }
-
       [[deprecated("Use drive() instead")]]
       void go(int s1, int s2) { drive(s1, s2); }
 
       [[deprecated("Use setMotorSpeeds() instead")]]
-      void move(int s1, int s2) { setMotorSpeeds(s1, s2); }
+      void Move(int s1, int s2) { setMotorSpeeds(s1, s2); }
 
       #ifdef smooth_changing
         [[deprecated("Use setDeadZone() instead")]]
         void setStartSpeed(uint8_t s) { setDeadZone(s); }
 
         [[deprecated("Use update() instead")]]
-        void tick() { update(); }
+        void Tick() { Update(); }
       #endif
     #endif
   private:

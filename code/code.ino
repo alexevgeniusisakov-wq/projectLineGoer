@@ -6,7 +6,8 @@
 Driver driver;
 
 // Настройки
-#define SpeedMove 100
+#define SpeedMove 80
+#define Kp 35            // Коэффициент пропорциональной регуляции смещения
 
 //Переменные Насткойки
 bool isInvers = false;
@@ -22,9 +23,6 @@ bool datas[pinsCount];
 int8_t countOffset();
 void getDatas();
 void lineGoing();
-
-// Настройки движения по линии
-#define Kp 30            // Коэффициент пропорциональной регуляции смещения
 
 void setup() {
   for (uint8_t i = 0; i < pinsCount; i++) {
@@ -70,7 +68,8 @@ int8_t countOffset(){
     }
   }
   int8_t result = beforeLine - afterLine;
-  if(abc(result) == pinsCount) result = result * (lastResult / abs(lastResult));
+  if(abs(result) == pinsCount) result = (lastResult > 0) ? pinsCount : 0 - pinsCount;
+  lastResult = result;
   return result;
 }
 

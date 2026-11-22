@@ -18,7 +18,7 @@
   rightDirPin1 = 13;  \
   leftDirPin2 = 0;  \
   rightDirPin2 = 0;  \
-  type = 0;    \
+  driverType = 0;    \
   StdPinModesInit()
 #elif defined(AmperkaDriver)
 #define ConstructorInit()   leftSpeedPin = 6;    \
@@ -27,7 +27,7 @@
   rightDirPin1 = 4;  \
   leftDirPin2 = 0;  \
   rightDirPin2 = 0;  \
-  type = 0;    \
+  driverType = 0;    \
   StdPinModesInit()
 #else
 #define offConstructure

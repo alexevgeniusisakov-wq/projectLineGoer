@@ -2,11 +2,11 @@
 #include <stdint.h>
 
 // Конструктор по умолчанию
-#ifndef offConstructure 
 Driver::Driver() {
+  #ifdef ConstructorInit
   ConstructorInit()
+  #endif
 }
-#endif
 
 // Пользовательский конструктор
 Driver::Driver(uint8_t typeTmp, uint8_t LMotorDirectionPin, uint8_t LMotorSpeedPin, uint8_t RMotorDirectionPin, uint8_t RMotorSpeedPin) {

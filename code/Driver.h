@@ -12,18 +12,8 @@
   pinMode(leftDirPin1, OUTPUT);  \
   pinMode(rightDirPin1, OUTPUT);
 
-// Тип драйвера задаётся здесь по умолчанию. Если он уже определён
-// (например, в скетче до подключения Driver.h) — ничего не меняем.
-// Это сохраняет универсальность библиотеки и чинит линковку:
-// без определения типа срабатывала ветка #else -> offConstructure
-// и конструктор Driver::Driver() не компилировался.
-#ifndef DriverTypeIsSet
-  #define AzimovDriver
-  //#define AmperkaDriver
-#endif
 
 #ifdef AzimovDriver
-#define DriverTypeIsSet
 #define ConstructorInit()   leftSpeedPin = 10;    \
   rightSpeedPin = 11;  \
   leftDirPin1 = 12;  \
@@ -33,7 +23,6 @@
   driverType = 0;    \
   StdPinModesInit()
 #elif defined(AmperkaDriver)
-#define DriverTypeIsSet
 #define ConstructorInit()   leftSpeedPin = 6;    \
   rightSpeedPin = 5;   \
   leftDirPin1 = 7;  \
@@ -43,7 +32,7 @@
   driverType = 0;    \
   StdPinModesInit()
 #else
-#define offConstructure
+#define AzimovDriver
 #endif
 
 #pragma region Class
@@ -51,9 +40,7 @@
 class Driver {
   public:
     // Конструкторы
-    #ifndef offConstructure 
-      Driver();
-    #endif
+    Driver();
 
     Driver(uint8_t typeTmp, uint8_t M1Pin1, uint8_t M1Pin2, uint8_t M2Pin1, uint8_t M2Pin2);
     Driver(uint8_t LMotorSpeedPin, uint8_t LMotorDirectionPin, uint8_t LMotorDirectionPin2, uint8_t RMotorSpeedPin, uint8_t RMotorDirectionPin, uint8_t RMotorDirectionPin2);

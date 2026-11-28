@@ -52,6 +52,7 @@ void lineGoing() {
     rightSpeed = constrain(rightSpeed, -255, 255);
 
     driver.go(leftSpeed, rightSpeed);
+    timer = millis() + 100;
   }
 }
 

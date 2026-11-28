@@ -1,3 +1,2 @@
-.vscode
-.ide
-.hml
+.*
+!.gitignore
